@@ -1,0 +1,42 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.3.11'
+}
+
+group 'fr.iim.iwm.a5.kelnerowski.florian.kotlin'
+version '1.0-SNAPSHOT'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    //Fill this in with the version of kotlinx in use in your project
+    def kotlinx_html_version = "0.6.12"
+
+    // include for server side
+    compile "org.jetbrains.kotlinx:kotlinx-html-jvm:${kotlinx_html_version}"
+
+    // include for client-side
+    compile "org.jetbrains.kotlinx:kotlinx-html-js:${kotlinx_html_version}"
+
+    // note: most likely you don't need to include them both
+
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    compile 'io.ktor:ktor-server-netty:1.1.2'
+    compile "io.ktor:ktor-auth:1.1.2"
+    compile("ch.qos.logback:logback-classic:1.2.3")
+    implementation "mysql:mysql-connector-java:8.0.15"
+    compile "io.ktor:ktor-freemarker:1.1.2"
+
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.0.0-RC1"
+    testImplementation 'com.h2database:h2:1.4.197'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}

@@ -43,10 +43,19 @@ fun Application.cmsApp(
     }
     install(Authentication) {
         form(name = "admin") {
-            userParamName = "user"
-            passwordParamName = "password"
+            userParamName = "admin"
+            passwordParamName = "admin"
             challenge = FormAuthChallenge.Unauthorized
-            validate { credentials -> /*...*/ }
+            validate { credentials ->
+                if (credentials.name == credentials.password) {
+                    println(credentials)
+                    println("credentials ok")
+                    UserIdPrincipal(credentials.name)
+                } else {
+                    println("credentials not ok")
+                    null
+                }
+            }
         }
     }
 
@@ -68,9 +77,10 @@ fun Application.cmsApp(
                     validate { credentials ->
                         if (credentials.name == credentials.password) {
                             println(credentials)
+                            println("credentials ok")
                             UserIdPrincipal(credentials.name)
                         } else {
-                            println("toto")
+                            println("credentials not ok")
                             null
                         }
                     }

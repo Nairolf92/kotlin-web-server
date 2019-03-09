@@ -44,4 +44,16 @@ class MysqlModel(url : String, user : String?, password: String?) : Model {
         }
         return null
     }
+
+    override fun setArticleCommentary(commentarytoAdd: Commentary): Any? {
+        println(commentarytoAdd)
+        connectionPool.use { connection -> commentarytoAdd
+            connection.prepareStatement("INSERT INTO commentary(idArticle,textArticle) VALUES (?, ?)").use { stmt ->
+                stmt.setInt(1, commentarytoAdd.idArticle)
+                stmt.setString(2, commentarytoAdd.textArticle)
+            stmt.execute()
+            }
+        }
+        return null
+    }
 }

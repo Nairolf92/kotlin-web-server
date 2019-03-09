@@ -4,8 +4,9 @@ import io.ktor.freemarker.FreeMarkerContent
 
 class ArticleListControllerImpl(private val model : Model) : ArticleListController {
 
-    override fun startFM(): FreeMarkerContent {
+    override fun startFM(userSession: UserSession?): FreeMarkerContent {
         val articles = model.getArticleList()
-        return FreeMarkerContent("index.ftl", mapOf("articles" to articles))
+        val map = mapOf("articles" to articles, "userSessions" to userSession)
+        return FreeMarkerContent("index.ftl", map)
     }
 }

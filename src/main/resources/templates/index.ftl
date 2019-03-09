@@ -1,16 +1,25 @@
+<#-- @ftlvariable name="" type="fr.iim.iwm.a5.kelnerowski.florian.kotlin.UserSession" -->
 <#-- @ftlvariable name="" type="fr.iim.iwm.a5.kelnerowski.florian.kotlin.IndexData" -->
-<!DOCTYPE html>
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<#if userSessions?? >
+    <#assign userSession = userSessions>
+</#if>
+<#include "head.ftl">
 
-    <title>CMS</title>
-</head>
-<body>
+    <section class="jumbotron text-center">
+        <div class="container">
+            <#if userSessions?? >
+                <h1 class="jumbotron-heading">Bienvenue <strong>${userSessions.user}</strong></h1>
+            <#else>
+                <h1 class="jumbotron-heading">Bienvenue ! </h1>
+            </#if>
+            <h2 class="jumbotron-heading">Liste des articles</h2>
+            <#list articles as article>
+                <p class="text-muted"><a href="/articles/${article.id}">${article.title}</a></p>
+            </#list>
+        </div>
+    </section>
 
-<#list articles as article>
-    <p><a href="/articles/${article.id}">${article.title}</a></p>
-</#list>
+</main>
 
-</body>
-</html>
+
+<#include "footer.ftl">

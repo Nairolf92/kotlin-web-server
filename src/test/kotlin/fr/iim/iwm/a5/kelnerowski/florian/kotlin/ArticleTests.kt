@@ -17,7 +17,7 @@ class ArticleTests {
 
         val articleController = ArticleControllerImpl(model)
 
-        val result = articleController.startFM(42)
+        val result = articleController.startFM(42, articleId)
         assertTrue(result is FreeMarkerContent)
     }
 
@@ -25,7 +25,7 @@ class ArticleTests {
     fun testArticleNotFound() {
         val articleController = ArticleControllerImpl(FakeModel())
 
-        val result = articleController.startFM(55)
+        val result = articleController.startFM(55, articleId)
         assertEquals(HttpStatusCode.NotFound, result)
     }
 }

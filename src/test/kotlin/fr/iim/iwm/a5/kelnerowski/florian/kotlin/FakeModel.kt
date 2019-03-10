@@ -1,6 +1,14 @@
 package fr.iim.iwm.a5.kelnerowski.florian.kotlin
 
 class FakeModel : Model {
+    override fun setArticleCommentary(commentary: Commentary): Any? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun getArticleCommentaries(idArticle: Int): List<Commentary>? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun getArticleList(): List<Article> {
         return listOf(Article(42, "Super Titre"))
     }

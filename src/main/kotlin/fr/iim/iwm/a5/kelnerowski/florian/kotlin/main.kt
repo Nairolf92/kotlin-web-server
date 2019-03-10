@@ -44,14 +44,14 @@ fun Application.cmsApp(
     routing {
         get("/") {
             val userSession = call.sessions.get<UserSession>() // Gets a session of this type or null if not available
-            val content = articleListController.startFM(userSession = userSession)
+            val content = articleListController.startFM(userSession)
             call.respond(content)
         }
 
         get("/articles/{articleId}") {
             val userSession = call.sessions.get<UserSession>() // Gets a session of this type or null if not available
             val articleId = call.parameters["articleId"]!!.toInt()
-            val content = articleController.startFM(userSession, articleId)
+            val content = articleController.startFM(userSession ,articleId)
             call.respond(content)
         }
 
@@ -61,7 +61,7 @@ fun Application.cmsApp(
             val idArticle = post["idArticle"]!!.toInt()
             val textArticle = post["commentary"]!!
             val commentary = Commentary(null, idArticle, textArticle)
-            commentaryController.checkCommentary(commentary)
+            commentaryController.addCommentary(commentary)
             call.respondRedirect("/articles/$idArticle")
         }
 

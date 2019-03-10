@@ -5,9 +5,10 @@ import io.ktor.http.HttpStatusCode
 
 class ArticleControllerImpl(private val model : Model) : ArticleController {
 
-    override fun startFM(userSession: UserSession?, articleId: Int): Any {
-        val article = model.getArticle(articleId)
-        val map = mapOf("article" to article, "userSessions" to userSession)
+    override fun startFM(userSession: UserSession?, idArticle: Int): Any {
+        val article = model.getArticle(idArticle)
+        val commentaries = model.getArticleCommentaries(idArticle)
+        val map = mapOf("article" to article, "commentaries" to commentaries, "userSessions" to userSession)
         if(article !== null) return FreeMarkerContent("article.ftl", map)
         return HttpStatusCode.NotFound
     }

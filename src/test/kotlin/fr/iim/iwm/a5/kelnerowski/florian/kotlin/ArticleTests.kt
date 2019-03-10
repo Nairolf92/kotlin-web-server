@@ -17,15 +17,18 @@ class ArticleTests {
 
         val articleController = ArticleControllerImpl(model)
 
-        val result = articleController.startFM(42, articleId)
+        val userSession = UserSession("flo")
+
+        val result = articleController.startFM(userSession,42)
         assertTrue(result is FreeMarkerContent)
     }
 
     @Test
     fun testArticleNotFound() {
         val articleController = ArticleControllerImpl(FakeModel())
+        val userSession = UserSession("flo")
 
-        val result = articleController.startFM(55, articleId)
+        val result = articleController.startFM(userSession,55)
         assertEquals(HttpStatusCode.NotFound, result)
     }
 }

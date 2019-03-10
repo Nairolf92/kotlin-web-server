@@ -26,13 +26,28 @@ class MysqlModel(url : String, user : String?, password: String?) : Model {
             connection.prepareStatement("SELECT * FROM articles RIGHT JOIN commentary ON articles.id = commentary.idArticle WHERE articles.id = ?").use { stmt ->
                 stmt.setInt(1, id)
                 val results = stmt.executeQuery()
-                println(results)
                 val found = results.next()
                 if (found) {
                     return Article(
                         results.getInt("id"),
                         results.getString("title"),
-                        results.getString("text"),
+                        results.getString("text")
+                    )
+                }
+            }
+        }
+        return null
+    }
+
+    override fun getArticleCommentaries(idArticle: Int): List<Commentary>? {
+        val commentaries = ArrayList<Commentary>()
+
+        connectionPool.use { connection ->
+            connection.prepareStatement("SELECT * FROM commentary WHERE idArticle = ?").use { stmt ->
+                stmt.setInt(1, idArticle)
+                val results = stmt.executeQuery()
+                while (results.next()) {
+                    commentaries.add(
                         Commentary(
                             results.getInt("id"),
                             results.getInt("idArticle"),
@@ -42,15 +57,15 @@ class MysqlModel(url : String, user : String?, password: String?) : Model {
                 }
             }
         }
-        return null
+        return commentaries
     }
 
-    override fun setArticleCommentary(commentarytoAdd: Commentary): Any? {
-        println(commentarytoAdd)
-        connectionPool.use { connection -> commentarytoAdd
+    override fun setArticleCommentary(commentary: Commentary): Any? {
+        println(commentary)
+        connectionPool.use { connection ->
             connection.prepareStatement("INSERT INTO commentary(idArticle,textArticle) VALUES (?, ?)").use { stmt ->
-                stmt.setInt(1, commentarytoAdd.idArticle)
-                stmt.setString(2, commentarytoAdd.textArticle)
+                stmt.setInt(1, commentary.idArticle)
+                stmt.setString(2, commentary.textArticle)
             stmt.execute()
             }
         }

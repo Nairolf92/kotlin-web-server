@@ -22,7 +22,7 @@
             <li class="nav-item active">
                 <a class="nav-link" href="/">Accueil <span class="sr-only">(current)</span></a>
             </li>
-            <#if userSessions?? >
+            <#if userSession?? >
                 <li class="nav-item">
                     <a class="nav-link" href="/logout">Déconnexion</a>
                 </li>

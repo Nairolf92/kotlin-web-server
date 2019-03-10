@@ -7,6 +7,7 @@ import io.ktor.application.install
 import io.ktor.features.CallLogging
 import io.ktor.features.DefaultHeaders
 import io.ktor.freemarker.FreeMarker
+import io.ktor.freemarker.FreeMarkerContent
 import io.ktor.http.ContentType
 import io.ktor.http.Parameters
 import io.ktor.request.receiveOrNull
@@ -21,6 +22,7 @@ import io.ktor.server.netty.Netty
 import io.ktor.sessions.*
 import kotlinx.html.*
 import kotlinx.html.stream.createHTML
+import java.io.File
 
 class App
 
@@ -38,7 +40,12 @@ fun Application.cmsApp(
     // This uses use the logger to log every call (request/response)
     install(CallLogging)
     install(Sessions) {
-        cookie<UserSession>("CMS_SESSION", SessionStorageMemory())
+        cookie<UserSession>(
+            "CMS_SESSION",
+            directorySessionStorage(File(".sessions"), cached = true)
+        ) {
+            cookie.path = "/" // Specify cookie's path '/' so it can be used in the whole site
+        }
     }
 
     routing {
@@ -48,16 +55,15 @@ fun Application.cmsApp(
             call.respond(content)
         }
 
-        get("/articles/{articleId}") {
+        get("/articles/{idArticle}") {
             val userSession = call.sessions.get<UserSession>() // Gets a session of this type or null if not available
-            val articleId = call.parameters["articleId"]!!.toInt()
-            val content = articleController.startFM(userSession ,articleId)
+            val idArticle = call.parameters["idArticle"]!!.toInt()
+            val content = articleController.startFM(userSession ,idArticle)
             call.respond(content)
         }
 
         post("/addArticleCommentary") {
             val post = call.receiveOrNull() ?: Parameters.Empty
-            println(post)
             val idArticle = post["idArticle"]!!.toInt()
             val textArticle = post["commentary"]!!
             val commentary = Commentary(null, idArticle, textArticle)
@@ -65,55 +71,32 @@ fun Application.cmsApp(
             call.respondRedirect("/articles/$idArticle")
         }
 
-        get("/login") {
-            val html = createHTML().html {
-                body {
-                    val message = call.parameters["message"] ?: ""
-                    if (message.isNotEmpty()) {
-                        div {
-                            +message
-                        }
-                    }
-                    p {
-                        +"Note: Utiliser le meme utilisateur et mot de passe pour cette démo"
-                    }
-                    form(
-                        action = "/login",
-                        encType = FormEncType.applicationXWwwFormUrlEncoded,
-                        method = FormMethod.post
-                    ) {
-                        div {
-                            +"Pseudo:"
-                            textInput(name = "username") { }
-                        }
-                        div {
-                            +"Mot de passe:"
-                            passwordInput(name = "password") { }
-                        }
-                        div {
-                            submitInput()
-                        }
-                    }
-                }
-            }
-            call.respondText(html, ContentType.Text.Html)
+        get("/commentary/delete/{idCommentary}") {
+            val userSession = call.sessions.get<UserSession>() // Gets a session of this type or null if not available
+            val idCommentary = call.parameters["idCommentary"]!!.toInt()
+            val content = commentaryController.deleteCommentary(userSession ,idCommentary)
+            call.respond(content)
         }
+        
+        get("/login") {
+            val userSession = call.sessions.get<UserSession>() // Gets a session of this type or null if not available
+            val message = call.parameters["message"] ?: ""
+            val map = mapOf("userSession" to userSession, "message" to message)
+            call.respond(FreeMarkerContent("login.ftl", map))
+        }
+
         post("/login") {
+            val userSession = call.sessions.get<UserSession>() // Gets a session of this type or null if not available
             val post = call.receiveOrNull() ?: Parameters.Empty
             val username = post["username"]
             val password = post["password"]
 
-            if (username != null && username.isNotBlank() && username == "admin" && password == "admin") {
+            if (username != null && username.isNotBlank() && username == password) {
                 call.sessions.set(UserSession(username))
                 call.respondRedirect("/")
             } else {
-                val html = createHTML().html {
-                    body {
-                        +"Identifiants invalides. "
-                        a(href = "/login") { +"Réesayer?" }
-                    }
-                }
-                call.respondText(html, ContentType.Text.Html)
+                val map = mapOf("userSession" to userSession, "wrongLogin" to "wrongLogin")
+                call.respond(FreeMarkerContent("login.ftl", map))
             }
         }
 

@@ -27,6 +27,7 @@ dependencies {
     compile("ch.qos.logback:logback-classic:1.2.3")
     implementation "mysql:mysql-connector-java:8.0.15"
     compile "io.ktor:ktor-freemarker:1.1.2"
+    compile "io.ktor:ktor-server-sessions:1.1.2"
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.jetbrains.kotlin:kotlin-test'

@@ -1,7 +1,7 @@
 <#-- @ftlvariable name="" type="fr.iim.iwm.a5.kelnerowski.florian.kotlin.Commentary" -->
 <#-- @ftlvariable name="" type="fr.iim.iwm.a5.kelnerowski.florian.kotlin.Article" -->
-<#if userSessions?? >
-    <#assign userSession = userSessions>
+<#if userSession?? >
+    <#assign userSession = userSession>
 </#if>
 
 <#include "head.ftl">

@@ -1,14 +1,14 @@
 <#-- @ftlvariable name="" type="fr.iim.iwm.a5.kelnerowski.florian.kotlin.UserSession" -->
 <#-- @ftlvariable name="" type="fr.iim.iwm.a5.kelnerowski.florian.kotlin.IndexData" -->
-<#if userSessions?? >
-    <#assign userSession = userSessions>
+<#if userSession?? >
+    <#assign userSession = userSession>
 </#if>
 <#include "head.ftl">
 
     <section class="jumbotron text-center">
         <div class="container">
-            <#if userSessions?? >
-                <h1 class="jumbotron-heading">Bienvenue <strong>${userSessions.user}</strong></h1>
+            <#if userSession?? >
+                <h1 class="jumbotron-heading">Bienvenue <strong>${userSession.user}</strong></h1>
             <#else>
                 <h1 class="jumbotron-heading">Bienvenue ! </h1>
             </#if>

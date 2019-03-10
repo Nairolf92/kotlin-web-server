@@ -1,6 +1,7 @@
 package fr.iim.iwm.a5.kelnerowski.florian.kotlin
 
 class MysqlModel(url : String, user : String?, password: String?) : Model {
+
     val connectionPool = ConnectionPool(url, user, password)
 
     override fun getArticleList(): List<Article> {
@@ -23,7 +24,7 @@ class MysqlModel(url : String, user : String?, password: String?) : Model {
 
     override fun getArticle(id: Int): Article? {
         connectionPool.use { connection ->
-            connection.prepareStatement("SELECT * FROM articles RIGHT JOIN commentary ON articles.id = commentary.idArticle WHERE articles.id = ?").use { stmt ->
+            connection.prepareStatement("SELECT * FROM articles WHERE articles.id = ?").use { stmt ->
                 stmt.setInt(1, id)
                 val results = stmt.executeQuery()
                 val found = results.next()
@@ -61,12 +62,21 @@ class MysqlModel(url : String, user : String?, password: String?) : Model {
     }
 
     override fun setArticleCommentary(commentary: Commentary): Any? {
-        println(commentary)
         connectionPool.use { connection ->
             connection.prepareStatement("INSERT INTO commentary(idArticle,textArticle) VALUES (?, ?)").use { stmt ->
                 stmt.setInt(1, commentary.idArticle)
                 stmt.setString(2, commentary.textArticle)
             stmt.execute()
+            }
+        }
+        return null
+    }
+
+    override fun deleteCommentary(idCommentary: Int): Any? {
+        connectionPool.use { connection ->
+            connection.prepareStatement("DELETE FROM commentary WHERE commentary.id = ?").use { stmt ->
+                stmt.setInt(1, idCommentary)
+                stmt.execute()
             }
         }
         return null

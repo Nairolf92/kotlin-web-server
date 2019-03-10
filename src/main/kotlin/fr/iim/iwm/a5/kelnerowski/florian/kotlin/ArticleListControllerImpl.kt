@@ -6,7 +6,7 @@ class ArticleListControllerImpl(private val model : Model) : ArticleListControll
 
     override fun startFM(userSession: UserSession?): FreeMarkerContent {
         val articles = model.getArticleList()
-        val map = mapOf("articles" to articles, "userSessions" to userSession)
+        val map = mapOf("articles" to articles, "userSession" to userSession)
         return FreeMarkerContent("index.ftl", map)
     }
 }

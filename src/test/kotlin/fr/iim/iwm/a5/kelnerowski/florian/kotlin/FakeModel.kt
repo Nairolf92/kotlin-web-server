@@ -1,6 +1,10 @@
 package fr.iim.iwm.a5.kelnerowski.florian.kotlin
 
 class FakeModel : Model {
+    override fun deleteCommentary(idCommentary: Int): Any? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun setArticleCommentary(commentary: Commentary): Any? {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

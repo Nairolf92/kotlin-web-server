@@ -19,6 +19,7 @@ class CommentaryTests {
         val userSession = UserSession("admin")
 
         val result = commentaryController.deleteCommentary(userSession,2)
-        assertTrue(result.template == "deleteArticle.ftl" && result.model == "userSession" to userSession)
+        val map = mapOf("userSession" to userSession)
+        assertTrue(result.template == "deleteArticle.ftl" && result.model == map)
     }
 }

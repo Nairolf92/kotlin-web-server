@@ -2,15 +2,19 @@ package fr.iim.iwm.a5.kelnerowski.florian.kotlin
 
 class FakeModel : Model {
     override fun deleteCommentary(idCommentary: Int): Any? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return null
     }
 
-    override fun setArticleCommentary(commentary: Commentary): Any? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun addArticleCommentary(commentary: Commentary): Any? {
+        return null
+    }
+
+    override fun addArticle(article: Article): Any? {
+        return null
     }
 
     override fun getArticleCommentaries(idArticle: Int): List<Commentary>? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return listOf(Commentary(null, 42, "commentaire article 42"))
     }
 
     override fun getArticleList(): List<Article> {

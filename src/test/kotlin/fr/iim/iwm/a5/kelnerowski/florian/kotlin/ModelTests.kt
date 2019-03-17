@@ -14,6 +14,16 @@ class ModelTests {
     fun initDB() {
         model.connectionPool.use { connection ->
             connection.prepareStatement("""
+                DROP TABLE IF EXISTS commentary;
+                CREATE TABLE commentary (
+                  id int(11) NOT NULL AUTO_INCREMENT,
+                  idArticle INT(11),
+                  textArticle varchar(255) NOT NULL,
+                  PRIMARY KEY (id)
+                );
+                INSERT INTO commentary VALUES
+                  (null, 1, 'Commentaire premier article'),
+                  (null, 2, 'Commentaire 2ème article');
                 DROP TABLE IF EXISTS articles;
                 CREATE TABLE articles (
                   id int(11) NOT NULL AUTO_INCREMENT,
@@ -45,6 +55,5 @@ class ModelTests {
         val article = model.getArticle(3)
 
         assertNull(article)
-
     }
 }

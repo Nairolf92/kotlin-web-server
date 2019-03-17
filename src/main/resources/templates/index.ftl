@@ -4,7 +4,6 @@
     <#assign userSession = userSession>
 </#if>
 <#include "head.ftl">
-
     <section class="jumbotron text-center">
         <div class="container">
             <#if userSession?? >
@@ -18,8 +17,5 @@
             </#list>
         </div>
     </section>
-
-</main>
-
 
 <#include "footer.ftl">

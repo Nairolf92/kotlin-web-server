@@ -5,7 +5,7 @@ import io.ktor.freemarker.FreeMarkerContent
 class CommentaryControllerImpl(private val model : Model) : CommentaryController {
 
     override fun addCommentary(commentary: Commentary): Any? {
-        model.setArticleCommentary(commentary)
+        model.addArticleCommentary(commentary)
         return null
     }
 
@@ -16,9 +16,11 @@ class CommentaryControllerImpl(private val model : Model) : CommentaryController
                 val map = mapOf("userSession" to userSession,"idCommentary" to idCommentary)
                 FreeMarkerContent("deleteArticle.ftl", map)
             } else{
-                FreeMarkerContent("deleteArticle.ftl", "userSession" to userSession)
+                val map = mapOf("userSession" to userSession)
+                FreeMarkerContent("deleteArticle.ftl", map)
             }
         }
-        return FreeMarkerContent("unauthorized.ftl", "userSession" to userSession)
+        val map = mapOf("userSession" to userSession)
+        return FreeMarkerContent("unauthorized.ftl", map)
     }
 }

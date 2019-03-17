@@ -1,5 +1,7 @@
 package fr.iim.iwm.a5.kelnerowski.florian.kotlin
 
+import io.ktor.http.HttpStatusCode
+
 class MysqlModel(url : String, user : String?, password: String?) : Model {
 
     val connectionPool = ConnectionPool(url, user, password)
@@ -40,6 +42,17 @@ class MysqlModel(url : String, user : String?, password: String?) : Model {
         return null
     }
 
+    override fun addArticle(article: Article): Any? {
+        connectionPool.use { connection ->
+            connection.prepareStatement("INSERT INTO articles(title,text) VALUES (?, ?)").use { stmt ->
+                stmt.setString(1, article.title)
+                stmt.setString(2, article.text)
+                stmt.execute()
+            }
+        }
+        return HttpStatusCode.Accepted
+    }
+
     override fun getArticleCommentaries(idArticle: Int): List<Commentary>? {
         val commentaries = ArrayList<Commentary>()
 
@@ -61,7 +74,7 @@ class MysqlModel(url : String, user : String?, password: String?) : Model {
         return commentaries
     }
 
-    override fun setArticleCommentary(commentary: Commentary): Any? {
+    override fun addArticleCommentary(commentary: Commentary): Any? {
         connectionPool.use { connection ->
             connection.prepareStatement("INSERT INTO commentary(idArticle,textArticle) VALUES (?, ?)").use { stmt ->
                 stmt.setInt(1, commentary.idArticle)

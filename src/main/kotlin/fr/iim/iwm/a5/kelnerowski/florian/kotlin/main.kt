@@ -8,20 +8,16 @@ import io.ktor.features.CallLogging
 import io.ktor.features.DefaultHeaders
 import io.ktor.freemarker.FreeMarker
 import io.ktor.freemarker.FreeMarkerContent
-import io.ktor.http.ContentType
 import io.ktor.http.Parameters
 import io.ktor.request.receiveOrNull
 import io.ktor.response.respond
 import io.ktor.response.respondRedirect
-import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.sessions.*
-import kotlinx.html.*
-import kotlinx.html.stream.createHTML
 import java.io.File
 
 class App
@@ -50,15 +46,31 @@ fun Application.cmsApp(
 
     routing {
         get("/") {
-            val userSession = call.sessions.get<UserSession>() // Gets a session of this type or null if not available
+            val userSession: UserSession? = call.sessions.get<UserSession>()
             val content = articleListController.startFM(userSession)
             call.respond(content)
         }
 
         get("/articles/{idArticle}") {
-            val userSession = call.sessions.get<UserSession>() // Gets a session of this type or null if not available
+            val userSession: UserSession? = call.sessions.get<UserSession>()
             val idArticle = call.parameters["idArticle"]!!.toInt()
             val content = articleController.startFM(userSession ,idArticle)
+            call.respond(content)
+        }
+
+        get("/addArticle") {
+            val userSession: UserSession? = call.sessions.get<UserSession>()
+            val content = articleController.startAddArticle(userSession)
+            call.respond(content)
+        }
+
+        post("/addArticle") {
+            val userSession: UserSession? = call.sessions.get<UserSession>()
+            val post = call.receiveOrNull() ?: Parameters.Empty
+            val title = post["title"]
+            val text = post["text"]
+            val article = Article(null, title, text)
+            val content = articleController.addArticle(userSession, article)
             call.respond(content)
         }
 
@@ -72,21 +84,21 @@ fun Application.cmsApp(
         }
 
         get("/commentary/delete/{idCommentary}") {
-            val userSession = call.sessions.get<UserSession>() // Gets a session of this type or null if not available
+            val userSession: UserSession? = call.sessions.get<UserSession>()
             val idCommentary = call.parameters["idCommentary"]!!.toInt()
             val content = commentaryController.deleteCommentary(userSession ,idCommentary)
             call.respond(content)
         }
         
         get("/login") {
-            val userSession = call.sessions.get<UserSession>() // Gets a session of this type or null if not available
+            val userSession: UserSession? = call.sessions.get<UserSession>()
             val message = call.parameters["message"] ?: ""
             val map = mapOf("userSession" to userSession, "message" to message)
             call.respond(FreeMarkerContent("login.ftl", map))
         }
 
-        post("/login") {
-            val userSession = call.sessions.get<UserSession>() // Gets a session of this type or null if not available
+        post(                               "/login") {
+            val userSession: UserSession? = call.sessions.get<UserSession>()
             val post = call.receiveOrNull() ?: Parameters.Empty
             val username = post["username"]
             val password = post["password"]

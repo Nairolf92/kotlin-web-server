@@ -17,7 +17,6 @@
             </ul>
         </#if>
 
-
         <form action="/addArticleCommentary" method="post">
             <div class="form-group">
                 <label for="labelCommentaire">Commentaire</label>
